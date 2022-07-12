@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+	:root{
+    --border-color-fill:rgb(74, 252, 58);
+    --border-color-empty:rgb(167, 220, 255);
+    --btn-color-normal:rgb(39, 79, 102);
+}
+*{
+    box-sizing: border-box;
+}
+body{
+    background:linear-gradient(-45deg,#ee7752,#e73c7e,#23a6d5,#23d5ab);
+    animation: gradient 8s ease-in-out  infinite;
+    background-size:1000% 1000%;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    height: 100vh;
+    overflow: hidden;
+    margin: 0;
+}
+@keyframes gradient {
+    0%{
+        background-position: 0% 50%;
+    }
+    50%{
+        background-position: 100% 50%;
+    }
+    100%{
+        background-position: 0% 50%;
+    }
+}
+.container{
+    text-align: center;
+}
+.progress-container{
+    width: 750px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom:30px;
+    position: relative;
+    font-family: sans-serif;
+}
+.progress-container::before{
+    content: "";
+    height: 5px;
+    width: 100%;
+    position: absolute;
+    top:50%;
+    left: 0;
+    transform: translateY(-50%);
+    z-index: -1;
+    background-color:var(--border-color-empty);
+}
+.circle{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color:rgb(205, 160, 247);
+    width: 30px;
+    height: 30px;
+    border: 3px solid var(--border-color-empty);
+    border-radius: 50%;
+}
+.progress{
+    height: 5px;
+    width: 0%;
+    position: absolute;
+    top:50%;
+    left: 0;
+    transform: translateY(-50%);
+    z-index: -1;
+    background-color:var(--border-color-fill);
+}
+.circle.active{
+    border-color:var(--border-color-fill);
+    color: white;
+    font-weight: bold;
+}
+.btn{
+    background-color: var(--btn-color-normal);
+    border: 0;
+    border-radius: 15px;
+    margin: 8px 30px;
+    padding: 8px 30px;
+    color: aliceblue;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.1s ease-in-out;
+}
+.btn:active{
+    transform: scale(0.9);
+    color: var(--border-color-fill);
+}
+#prev:active{
+    color: var(--border-color-empty);
+}
+.btn:focus{
+    outline: 0;
+}
+.btn:disabled{
+    cursor: not-allowed;
+    background-color: var(--border-color-empty);
+}
+</style>
+</head>
+<body>
+    <div class="container">
+        <div class="progress-container">
+            <div class="progress" id="progress"></div>
+            <div class="circle active">1</div>
+            <div class="circle">2</div>
+            <div class="circle">3</div>
+            <div class="circle">4</div>
+            <div class="circle">5</div>
+            <div class="circle">6</div>
+            <div class="circle">7</div>
+            <div class="circle">8</div>
+            <div class="circle">9</div>
+            <div class="circle">10</div>
+        </div>
+        <button class="btn" id="prev" disabled>Prev</button>
+        <button class="btn" id="next">Next</button>
+    </div>
+    <script>
+const progress = document.getElementById("progress");
+const prev = document.getElementById("prev");
+const next = document.getElementById("next");
+const circles = document.querySelectorAll(".circle");
+
+let currentActive = 1;
+
+next.addEventListener("click",()=>{
+    currentActive ++;
+    if(currentActive>circles.length){
+            currentActive = circles.length
+    }
+    update();
+});
+prev.addEventListener("click",()=>{
+    currentActive --;
+    if(currentActive<1){
+        currentActive = 1;
+    }
+    update();
+});
+
+function update(){
+
+    circles.forEach((circle,index)=>{
+        if(index<currentActive){
+            circle.classList.add("active");
+        }else{
+            circle.classList.remove("active");
+        }
+    })
+
+    const actives = document.querySelectorAll(".active");
+    progress.style.width = (actives.length-1)/(circles.length-1)*100+"%";
+
+    if(currentActive === circles.length){
+        next.disabled = true;
+    }else if(currentActive === 1){
+        prev.disabled = false;
+    }else{
+        next.disabled = false;
+        prev.disabled = false;
+    }
+}
+    
+
+    
+</script>
+</body>
+</html>
